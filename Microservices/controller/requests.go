@@ -16,6 +16,7 @@ func GetRequest() []byte {
 		log.Fatalln(err)
 		return nil
 	}
+	defer resp.Body.Close()
 
 	body, err := ioutil.ReadAll(resp.Body)
 	if err != nil {
