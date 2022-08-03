@@ -50,7 +50,6 @@ func (d *LocalDB) Add(data models.Data) {
 		data.StoreId,
 		data.DateCreated,
 	)
-	fmt.Println(data.OrderId, " was succesfully added to DB")
 	if err != nil {
 		log.Print(err)
 	}
