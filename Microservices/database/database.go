@@ -9,15 +9,13 @@ import (
 )
 
 const (
-	//db info
 	host     = "localhost"
 	port     = 5432
 	user     = "myUser"
 	password = "myPassword"
 	dbname   = "myDb"
 
-	//commands for db
-	insertJSON = `INSERT INTO "order_table"( "order_id", "status", "store_id", "date_created") values($1 , $2 , $3 , $4)`
+	dbInsertJSON = `INSERT INTO "order_table"( "order_id", "status", "store_id", "date_created") values($1 , $2 , $3 , $4)`
 )
 
 type LocalDB struct {
@@ -46,7 +44,7 @@ func New() LocalDB {
 
 func (d *LocalDB) Add(data models.Data) {
 	_, err := d.DbStruct.Exec(
-		insertJSON,
+		dbInsertJSON,
 		data.OrderId,
 		data.Status,
 		data.StoreId,
