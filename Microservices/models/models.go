@@ -1,7 +1,5 @@
 package models
 
-//Controller's structs
-
 type Content struct {
 	Content []Data `json:"content"`
 }
