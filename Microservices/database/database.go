@@ -42,7 +42,7 @@ func New() LocalDB {
 	return database
 }
 
-func (d *LocalDB) Add(data models.Data) {
+func (d *LocalDB) Add(data models.OrderData) {
 	_, err := d.DbStruct.Exec(
 		dbInsertJSON,
 		data.OrderId,

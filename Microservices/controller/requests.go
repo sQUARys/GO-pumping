@@ -28,9 +28,7 @@ func GetBodyRequest() []byte {
 }
 
 func UnMarshal(body []byte) models.Content {
-
 	var content models.Content
-
 	err := json.Unmarshal(body, &content)
 
 	if err != nil {

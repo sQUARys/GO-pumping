@@ -1,10 +1,10 @@
 package models
 
 type Content struct {
-	Content []Data `json:"content"`
+	Content []OrderData `json:"content"`
 }
 
-type Data struct {
+type OrderData struct {
 	OrderId     int    `json:"order_id"`
 	Status      string `json:"status"`
 	StoreId     int    `json:"store_id"`
