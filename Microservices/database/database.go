@@ -44,7 +44,7 @@ func New() LocalDB {
 	return database
 }
 
-func (d *LocalDB) Add(data models.OrderData) {
+func (d *LocalDB) Add(data models.Order) {
 	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
 	defer cancel()
 
