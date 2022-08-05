@@ -2,10 +2,12 @@ package database
 
 import (
 	"RostPart4/models"
+	"context"
 	"database/sql"
 	"fmt"
 	_ "github.com/lib/pq"
 	"log"
+	"time"
 )
 
 const (
@@ -43,7 +45,11 @@ func New() LocalDB {
 }
 
 func (d *LocalDB) Add(data models.OrderData) {
-	_, err := d.DbStruct.Exec(
+	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
+	defer cancel()
+
+	_, err := d.DbStruct.ExecContext(
+		ctx,
 		dbInsertJSON,
 		data.OrderId,
 		data.Status,
