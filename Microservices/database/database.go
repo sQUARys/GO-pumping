@@ -25,9 +25,9 @@ type LocalDB struct {
 }
 
 func New() LocalDB {
-	dbConnection := fmt.Sprintf("host=%s port=%d user=%s password=%s dbname=%s sslmode=disable", host, port, user, password, dbname)
+	connectionString := fmt.Sprintf("host=%s port=%d user=%s password=%s dbname=%s sslmode=disable", host, port, user, password, dbname)
 
-	db, err := sql.Open("postgres", dbConnection)
+	db, err := sql.Open("postgres", connectionString)
 	if err != nil {
 		log.Fatalln(err)
 	}
