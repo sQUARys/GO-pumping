@@ -31,10 +31,10 @@ func UnMarshal(body []byte) models.Content {
 
 	var content models.Content
 
-	error := json.Unmarshal(body, &content)
+	err := json.Unmarshal(body, &content)
 
-	if error != nil {
-		fmt.Println(error)
+	if err != nil {
+		fmt.Println(err)
 		return models.Content{}
 	}
 	return content
