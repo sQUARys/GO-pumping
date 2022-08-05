@@ -1,7 +1,7 @@
 package controller
 
 import (
-	"RostPart4/models"
+	"Microservices/models"
 	"encoding/json"
 	"io/ioutil"
 	"log"

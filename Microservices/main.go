@@ -1,9 +1,9 @@
 package main
 
 import (
-	"RostPart4/controller"
-	"RostPart4/database"
-	"RostPart4/models"
+	"Microservices/controller"
+	"Microservices/database"
+	"Microservices/models"
 	"sync"
 	"time"
 )

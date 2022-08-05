@@ -1,7 +1,7 @@
 package database
 
 import (
-	"RostPart4/models"
+	"Microservices/models"
 	"context"
 	"database/sql"
 	"fmt"
