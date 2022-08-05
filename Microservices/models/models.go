@@ -1,7 +1,7 @@
 package models
 
 type Content struct {
-	Content []OrderData `json:"content"`
+	Content []Order `json:"content"`
 }
 
 type Order struct {
