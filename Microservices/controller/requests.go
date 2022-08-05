@@ -9,7 +9,7 @@ import (
 	"net/http"
 )
 
-func GetRequest() []byte {
+func GetBodyRequest() []byte {
 	url := "http://localhost:8081"
 	resp, err := http.Get(url)
 	if err != nil {

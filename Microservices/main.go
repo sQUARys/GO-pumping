@@ -10,7 +10,7 @@ func main() {
 	for true {
 		db := database.New()
 
-		bodyJSON := controller.GetRequest()
+		bodyJSON := controller.GetBodyRequest()
 		body := controller.UnMarshal(bodyJSON)
 
 		for i := 0; i < len(body.Content); i++ {
