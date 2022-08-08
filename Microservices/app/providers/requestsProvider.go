@@ -1,12 +1,16 @@
 package providers
 
 import (
-	"Microservices/models"
+	dbRepo "Microservices/repositories"
 	"encoding/json"
 	"io/ioutil"
 	"log"
 	"net/http"
 )
+
+type Content struct {
+	Content []dbRepo.Order `json:"content"`
+}
 
 func GetBodyRequest() []byte {
 	url := "http://localhost:8081"
@@ -26,13 +30,13 @@ func GetBodyRequest() []byte {
 	return body
 }
 
-func UnMarshal(body []byte) models.Content {
-	var content models.Content
+func UnMarshal(body []byte) Content {
+	var content Content
 	err := json.Unmarshal(body, &content)
 
 	if err != nil {
 		log.Println("Error: ", err)
-		return models.Content{}
+		return Content{}
 	}
 	return content
 }

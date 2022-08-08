@@ -1,7 +1,6 @@
 package database
 
 import (
-	"Microservices/models"
 	"context"
 	"database/sql"
 	"fmt"
@@ -24,6 +23,13 @@ type LocalDB struct {
 	DbStruct *sql.DB
 }
 
+type Order struct {
+	OrderId     int    `json:"order_id"`
+	Status      string `json:"status"`
+	StoreId     int    `json:"store_id"`
+	DateCreated string `json:"date_created"`
+}
+
 func New() LocalDB {
 	connectionString := fmt.Sprintf("host=%s port=%d user=%s password=%s dbname=%s sslmode=disable", host, port, user, password, dbname)
 
@@ -44,7 +50,7 @@ func New() LocalDB {
 	return database
 }
 
-func (d *LocalDB) Add(data models.Order) {
+func (d *LocalDB) Add(data Order) {
 	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
 	defer cancel()
 

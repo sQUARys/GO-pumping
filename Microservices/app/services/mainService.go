@@ -1,9 +1,9 @@
 package main
 
 import (
-	"Microservices/database"
 	"Microservices/models"
-	database2 "Microservices/providers"
+	provider "Microservices/providers"
+	"Microservices/repositories"
 	"time"
 )
 
@@ -14,8 +14,8 @@ func main() {
 
 	db := database.New()
 	for range ticker.C {
-		bodyJSON := database2.GetBodyRequest()
-		body = database2.UnMarshal(bodyJSON)
+		bodyJSON := provider.GetBodyRequest()
+		body = provider.UnMarshal(bodyJSON)
 		for j := 0; j < len(body.Content); j++ {
 			db.Add(body.Content[j])
 		}
