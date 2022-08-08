@@ -1,14 +1,13 @@
 package main
 
 import (
-	"Microservices/models"
 	provider "Microservices/providers"
 	"Microservices/repositories"
 	"time"
 )
 
 func main() {
-	var body models.Content
+	var body provider.Content
 
 	ticker := time.NewTicker(time.Minute)
 
