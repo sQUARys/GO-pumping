@@ -1,22 +1,11 @@
-package main
+package services
 
-import (
-	provider "Microservices/providers"
-	"Microservices/repositories"
-	"time"
-)
+import "Microservices/providers"
 
-func main() {
-	var body provider.Content
+type service struct {
+	prov providers.Provider
+}
 
-	ticker := time.NewTicker(time.Minute)
-
-	db := database.New()
-	for range ticker.C {
-		bodyJSON := provider.GetBodyRequest()
-		body = provider.UnMarshal(bodyJSON)
-		for j := 0; j < len(body.Content); j++ {
-			db.Add(body.Content[j])
-		}
-	}
+func New(prov provider) *service {
+	serv := service{}
 }

@@ -8,11 +8,16 @@ import (
 	"net/http"
 )
 
-type Content struct {
+type Provider struct {
 	Content []dbRepo.Order `json:"content"`
 }
 
-func GetBodyRequest() []byte {
+func New() *Provider {
+	prov := Provider{}
+	return &prov
+}
+
+func (prov *Provider) GetBodyRequest() []byte {
 	url := "http://localhost:8081"
 	resp, err := http.Get(url)
 	if err != nil {
@@ -30,13 +35,9 @@ func GetBodyRequest() []byte {
 	return body
 }
 
-func UnMarshal(body []byte) Content {
-	var content Content
-	err := json.Unmarshal(body, &content)
-
+func (prov *Provider) UnMarshal(body []byte) {
+	err := json.Unmarshal(body, &prov.Content)
 	if err != nil {
 		log.Println("Error: ", err)
-		return Content{}
 	}
-	return content
 }

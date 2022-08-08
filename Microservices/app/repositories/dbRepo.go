@@ -19,8 +19,26 @@ const (
 	dbInsertJSON = `INSERT INTO "order_table"( "order_id", "status", "store_id", "date_created") values($1 , $2 , $3 , $4)`
 )
 
-type LocalDB struct {
+type Repository struct {
 	DbStruct *sql.DB
+}
+
+func (repo *Repository) New() {
+
+	connectionString := fmt.Sprintf("host=%s port=%d user=%s password=%s dbname=%s sslmode=disable", host, port, user, password, dbname)
+
+	db, err := sql.Open("postgres", connectionString)
+	if err != nil {
+		log.Fatalln(err)
+	}
+
+	repo.DbStruct = db
+
+	err = db.Ping()
+	if err != nil {
+		log.Fatalln(err)
+	}
+
 }
 
 type Order struct {
@@ -30,31 +48,11 @@ type Order struct {
 	DateCreated string `json:"date_created"`
 }
 
-func New() LocalDB {
-	connectionString := fmt.Sprintf("host=%s port=%d user=%s password=%s dbname=%s sslmode=disable", host, port, user, password, dbname)
-
-	db, err := sql.Open("postgres", connectionString)
-	if err != nil {
-		log.Fatalln(err)
-	}
-
-	database := LocalDB{
-		DbStruct: db,
-	}
-
-	err = db.Ping()
-	if err != nil {
-		log.Fatalln(err)
-	}
-
-	return database
-}
-
-func (d *LocalDB) Add(data Order) {
+func (repo *Repository) Add(data Order) {
 	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
 	defer cancel()
 
-	_, err := d.DbStruct.ExecContext(
+	_, err := repo.DbStruct.ExecContext(
 		ctx,
 		dbInsertJSON,
 		data.OrderId,
