@@ -1,10 +1,10 @@
 package providers
 
 import (
-	dbRepo "Microservices/repositories"
 	"encoding/json"
 	"io/ioutil"
 	"log"
+	dbRepo "microservice/app/repositories"
 	"net/http"
 )
 
@@ -36,7 +36,7 @@ func (prov *Provider) GetBodyRequest() []byte {
 }
 
 func (prov *Provider) UnMarshal(body []byte) {
-	err := json.Unmarshal(body, &prov.Content)
+	err := json.Unmarshal(body, prov)
 	if err != nil {
 		log.Println("Error: ", err)
 	}

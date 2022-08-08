@@ -1,4 +1,4 @@
-package database
+package repositories
 
 import (
 	"context"
@@ -23,7 +23,7 @@ type Repository struct {
 	DbStruct *sql.DB
 }
 
-func (repo *Repository) New() {
+func New() *Repository {
 
 	connectionString := fmt.Sprintf("host=%s port=%d user=%s password=%s dbname=%s sslmode=disable", host, port, user, password, dbname)
 
@@ -32,13 +32,16 @@ func (repo *Repository) New() {
 		log.Fatalln(err)
 	}
 
-	repo.DbStruct = db
+	repo := Repository{
+		DbStruct: db,
+	}
 
 	err = db.Ping()
 	if err != nil {
 		log.Fatalln(err)
 	}
 
+	return &repo
 }
 
 type Order struct {
@@ -48,17 +51,17 @@ type Order struct {
 	DateCreated string `json:"date_created"`
 }
 
-func (repo *Repository) Add(data Order) {
+func (repo *Repository) Add(order Order) {
 	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
 	defer cancel()
 
 	_, err := repo.DbStruct.ExecContext(
 		ctx,
 		dbInsertJSON,
-		data.OrderId,
-		data.Status,
-		data.StoreId,
-		data.DateCreated,
+		order.OrderId,
+		order.Status,
+		order.StoreId,
+		order.DateCreated,
 	)
 	if err != nil {
 		log.Print(err)
