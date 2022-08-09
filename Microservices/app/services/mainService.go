@@ -2,16 +2,17 @@ package services
 
 import (
 	"microservice/app/models"
+	"time"
 )
 
 type Service struct {
-	prov providerInterface
-	repo repositoryInterface
+	Prov providerInterface
+	Repo repositoryInterface
 }
 
 type providerInterface interface {
-	GetBodyRequest() []byte
-	UnMarshal([]byte)
+	GetLocalhostBodyRequest() []byte
+	UnMarshalBodyRequest([]byte) []models.Order
 }
 
 type repositoryInterface interface {
@@ -20,17 +21,25 @@ type repositoryInterface interface {
 
 func New(provider providerInterface, repository repositoryInterface) *Service {
 	serv := Service{
-		prov: provider,
-		repo: repository,
+		Prov: provider,
+		Repo: repository,
 	}
 	return &serv
 }
 
-func (serv *Service) GetBodyFromServer() {
-	bodyJSON := serv.prov.GetBodyRequest()
-	serv.prov.UnMarshal(bodyJSON)
+func (serv *Service) GetBodyFromServer() []models.Order {
+	bodyJSON := serv.Prov.GetLocalhostBodyRequest()
+	bodyUnMarshalled := serv.Prov.UnMarshalBodyRequest(bodyJSON)
+	return bodyUnMarshalled
 }
 
-func (serv *Service) AddToDB(order models.Order) {
-	serv.repo.Add(order)
+func (serv *Service) SendOrdersToDB() {
+	ticker := time.NewTicker(time.Second)
+
+	for range ticker.C {
+		orders := serv.GetBodyFromServer()
+		for i := 0; i < len(orders); i++ {
+			serv.Repo.Add(orders[i])
+		}
+	}
 }

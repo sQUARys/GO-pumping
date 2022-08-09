@@ -1,5 +1,9 @@
 package models
 
+type Content struct {
+	Orders []Order `json:"content"`
+}
+
 type Order struct {
 	OrderId     int    `json:"order_id"`
 	Status      string `json:"status"`

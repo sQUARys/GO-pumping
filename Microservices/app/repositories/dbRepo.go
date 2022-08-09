@@ -6,6 +6,7 @@ import (
 	"fmt"
 	_ "github.com/lib/pq"
 	"log"
+	"microservice/app/models"
 	"time"
 )
 
@@ -44,7 +45,7 @@ func New() *Repository {
 	return &repo
 }
 
-func (repo *Repository) Add(order Order) {
+func (repo *Repository) Add(order models.Order) {
 	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
 	defer cancel()
 
