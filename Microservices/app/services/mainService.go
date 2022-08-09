@@ -1,28 +1,36 @@
 package services
 
 import (
-	"microservice/app/providers"
-	"microservice/app/repositories"
+	"microservice/app/models"
 )
 
 type Service struct {
-	Prov providers.Provider
-	Repo repositories.Repository
+	prov providerInterface
+	repo repositoryInterface
 }
 
-func New(provider providers.Provider, repository repositories.Repository) *Service {
+type providerInterface interface {
+	GetBodyRequest() []byte
+	UnMarshal([]byte)
+}
+
+type repositoryInterface interface {
+	Add(models.Order)
+}
+
+func New(provider providerInterface, repository repositoryInterface) *Service {
 	serv := Service{
-		Prov: provider,
-		Repo: repository,
+		prov: provider,
+		repo: repository,
 	}
 	return &serv
 }
 
 func (serv *Service) GetBodyFromServer() {
-	bodyJSON := serv.Prov.GetBodyRequest()
-	serv.Prov.UnMarshal(bodyJSON)
+	bodyJSON := serv.prov.GetBodyRequest()
+	serv.prov.UnMarshal(bodyJSON)
 }
 
-func (serv *Service) AddToDB(order repositories.Order) {
-	serv.Repo.Add(order)
+func (serv *Service) AddToDB(order models.Order) {
+	serv.repo.Add(order)
 }

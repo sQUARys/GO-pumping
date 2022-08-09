@@ -8,7 +8,6 @@ import (
 )
 
 func main() {
-
 	provider := providers.New()
 	repository := repositories.New()
 	service := services.New(*provider, *repository)

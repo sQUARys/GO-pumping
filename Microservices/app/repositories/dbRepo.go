@@ -44,13 +44,6 @@ func New() *Repository {
 	return &repo
 }
 
-type Order struct {
-	OrderId     int    `json:"order_id"`
-	Status      string `json:"status"`
-	StoreId     int    `json:"store_id"`
-	DateCreated string `json:"date_created"`
-}
-
 func (repo *Repository) Add(order Order) {
 	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
 	defer cancel()
