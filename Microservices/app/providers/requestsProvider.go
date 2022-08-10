@@ -4,7 +4,6 @@ import (
 	"encoding/json"
 	"io/ioutil"
 	"log"
-	"microservice/app/models"
 	"net/http"
 )
 

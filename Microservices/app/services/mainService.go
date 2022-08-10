@@ -1,7 +1,7 @@
 package services
 
 import (
-	"microservice/app/models"
+	"microservice/app/model"
 	"time"
 )
 
@@ -12,11 +12,11 @@ type Service struct {
 
 type providerInterface interface {
 	GetLocalhostBodyRequest() []byte
-	UnMarshalBodyRequest([]byte) []models.Order
+	UnMarshalBodyRequest([]byte) []model.Order
 }
 
 type repositoryInterface interface {
-	Add(models.Order)
+	Add(model.Order)
 }
 
 func New(provider providerInterface, repository repositoryInterface) *Service {
@@ -27,7 +27,7 @@ func New(provider providerInterface, repository repositoryInterface) *Service {
 	return &serv
 }
 
-func (serv *Service) GetBodyFromServer() []models.Order {
+func (serv *Service) GetBodyFromServer() []model.Order {
 	bodyJSON := serv.Prov.GetLocalhostBodyRequest()
 	bodyUnMarshalled := serv.Prov.UnMarshalBodyRequest(bodyJSON)
 	return bodyUnMarshalled

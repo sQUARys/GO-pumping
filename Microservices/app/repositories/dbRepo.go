@@ -6,7 +6,6 @@ import (
 	"fmt"
 	_ "github.com/lib/pq"
 	"log"
-	"microservice/app/models"
 	"time"
 )
 

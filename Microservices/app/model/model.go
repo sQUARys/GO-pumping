@@ -1,4 +1,4 @@
-package models
+package model
 
 type Content struct {
 	Orders []Order `json:"content"`
