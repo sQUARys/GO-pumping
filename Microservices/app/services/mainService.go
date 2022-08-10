@@ -27,17 +27,17 @@ func New(provider provider, repository repositoryOfOrders) *Service {
 	return &serv
 }
 
-func (serv *Service) GetBodyFromServer() []model.Order {
+func (serv *Service) GetOrdersFromServer() []model.Order {
 	bodyJSON := serv.Prov.GetLocalhostBodyRequest()
 	bodyUnMarshalled := serv.Prov.UnMarshalBodyRequest(bodyJSON)
 	return bodyUnMarshalled
 }
 
-func (serv *Service) SendOrdersToDB() {
+func (serv *Service) Start() {
 	ticker := time.NewTicker(time.Second)
 
 	for range ticker.C {
-		orders := serv.GetBodyFromServer()
+		orders := serv.GetOrdersFromServer()
 		for i := 0; i < len(orders); i++ {
 			serv.Repo.Add(orders[i])
 		}
