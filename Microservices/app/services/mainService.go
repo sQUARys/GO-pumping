@@ -11,8 +11,7 @@ type Service struct {
 }
 
 type provider interface {
-	GetLocalhostBodyRequest() []byte
-	UnMarshalBodyRequest([]byte) []model.Order
+	GetLocalhostBodyRequest() []model.Order
 }
 
 type repositoryOfOrders interface {
@@ -28,9 +27,8 @@ func New(provider provider, repository repositoryOfOrders) *Service {
 }
 
 func (serv *Service) GetOrdersFromServer() []model.Order {
-	bodyJSON := serv.Prov.GetLocalhostBodyRequest()
-	bodyUnMarshalled := serv.Prov.UnMarshalBodyRequest(bodyJSON)
-	return bodyUnMarshalled
+	orders := serv.Prov.GetLocalhostBodyRequest()
+	return orders
 }
 
 func (serv *Service) Start() {

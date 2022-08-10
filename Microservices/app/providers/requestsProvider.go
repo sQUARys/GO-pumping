@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"io/ioutil"
 	"log"
+	"microservice/app/model"
 	"net/http"
 )
 
@@ -18,7 +19,7 @@ func New() *Provider {
 	return &prov
 }
 
-func (prov *Provider) GetLocalhostBodyRequest() []byte {
+func (prov *Provider) GetLocalhostBodyRequest() []model.Order {
 	resp, err := http.Get(prov.Url)
 	if err != nil {
 		log.Println("Error: ", err)
@@ -32,11 +33,13 @@ func (prov *Provider) GetLocalhostBodyRequest() []byte {
 		return nil
 	}
 
-	return body
+	orders := prov.UnMarshalBodyRequest(body)
+
+	return orders
 }
 
-func (prov *Provider) UnMarshalBodyRequest(body []byte) []models.Order {
-	var content models.Content
+func (prov *Provider) UnMarshalBodyRequest(body []byte) []model.Order {
+	var content model.Content
 	err := json.Unmarshal(body, &content)
 	if err != nil {
 		log.Println("Error: ", err)
