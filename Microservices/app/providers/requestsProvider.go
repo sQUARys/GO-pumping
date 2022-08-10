@@ -2,9 +2,9 @@ package providers
 
 import (
 	"encoding/json"
+	"github.com/sQUARys/GO-pumping/app/model"
 	"io/ioutil"
 	"log"
-	"microservice/app/model"
 	"net/http"
 )
 

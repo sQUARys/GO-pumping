@@ -1,7 +1,7 @@
 package services
 
 import (
-	"microservice/app/model"
+	"github.com/sQUARys/GO-pumping/app/model"
 	"time"
 )
 

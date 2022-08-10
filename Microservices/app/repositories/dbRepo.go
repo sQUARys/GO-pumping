@@ -5,6 +5,7 @@ import (
 	"database/sql"
 	"fmt"
 	_ "github.com/lib/pq"
+	"github.com/sQUARys/GO-pumping/app/model"
 	"log"
 	"time"
 )
@@ -44,7 +45,7 @@ func New() *Repository {
 	return &repo
 }
 
-func (repo *Repository) Add(order models.Order) {
+func (repo *Repository) Add(order model.Order) {
 	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
 	defer cancel()
 

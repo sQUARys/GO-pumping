@@ -1,4 +1,4 @@
-module microservice
+module github.com/sQUARys/GO-pumping
 
 go 1.18
 

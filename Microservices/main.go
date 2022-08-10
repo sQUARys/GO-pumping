@@ -1,9 +1,9 @@
 package main
 
 import (
-	"microservice/app/providers"
-	"microservice/app/repositories"
-	"microservice/app/services"
+	"github.com/sQUARys/GO-pumping/app/providers"
+	"github.com/sQUARys/GO-pumping/app/repositories"
+	"github.com/sQUARys/GO-pumping/app/services"
 )
 
 func main() {
