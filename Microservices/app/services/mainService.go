@@ -26,16 +26,11 @@ func New(provider provider, repository repositoryOfOrders) *Service {
 	return &serv
 }
 
-func (serv *Service) GetOrdersFromServer() []model.Order {
-	orders := serv.Prov.GetLocalhostBodyRequest()
-	return orders
-}
-
 func (serv *Service) Start() {
 	ticker := time.NewTicker(time.Second)
 
 	for range ticker.C {
-		orders := serv.GetOrdersFromServer()
+		orders := serv.Prov.GetLocalhostBodyRequest()
 		for i := 0; i < len(orders); i++ {
 			serv.Repo.Add(orders[i])
 		}
