@@ -6,20 +6,20 @@ import (
 )
 
 type Service struct {
-	Prov providerInterface
-	Repo repositoryInterface
+	Prov provider
+	Repo repositoryOfOrders
 }
 
-type providerInterface interface {
+type provider interface {
 	GetLocalhostBodyRequest() []byte
 	UnMarshalBodyRequest([]byte) []model.Order
 }
 
-type repositoryInterface interface {
+type repositoryOfOrders interface {
 	Add(model.Order)
 }
 
-func New(provider providerInterface, repository repositoryInterface) *Service {
+func New(provider provider, repository repositoryOfOrders) *Service {
 	serv := Service{
 		Prov: provider,
 		Repo: repository,
