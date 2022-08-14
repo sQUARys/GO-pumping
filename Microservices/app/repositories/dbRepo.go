@@ -7,6 +7,7 @@ import (
 	_ "github.com/lib/pq"
 	"github.com/sQUARys/GO-pumping/app/model"
 	"log"
+	"strings"
 	"time"
 )
 
@@ -17,7 +18,7 @@ const (
 	password = "myPassword"
 	dbname   = "myDb"
 
-	dbInsertJSON = `INSERT INTO "order_table"( "order_id", "status", "store_id", "date_created") values($1 , $2 , $3 , $4)`
+	dbInsertJSON = `INSERT INTO "order_table"( "order_id", "status", "store_id", "date_created") VALUES `
 )
 
 type Repository struct {
@@ -45,17 +46,24 @@ func New() *Repository {
 	return &repo
 }
 
-func (repo *Repository) Add(order model.Order) {
+func (repo *Repository) Add(orders []model.Order) {
 	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
 	defer cancel()
 
+	var formattedOrders []string
+	format := "(%d , '%s' , %d , '%s'),"
+	for i := 0; i < len(orders); i++ {
+		formattedOrders = append(formattedOrders, fmt.Sprintf(format, orders[i].OrderId, orders[i].Status, orders[i].StoreId, orders[i].DateCreated))
+	}
+	var dbInsertRequest string
+
+	dbInsertRequest = strings.Join(formattedOrders, "")
+	dbInsertRequest = strings.TrimSuffix(dbInsertRequest, ",")
+	dbInsertRequest = dbInsertJSON + dbInsertRequest
+
 	_, err := repo.DbStruct.ExecContext(
 		ctx,
-		dbInsertJSON,
-		order.OrderId,
-		order.Status,
-		order.StoreId,
-		order.DateCreated,
+		dbInsertRequest,
 	)
 	if err != nil {
 		log.Print(err)

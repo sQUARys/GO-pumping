@@ -15,7 +15,7 @@ type provider interface {
 }
 
 type repositoryOfOrders interface {
-	Add(model.Order)
+	Add([]model.Order)
 }
 
 func New(provider provider, repository repositoryOfOrders) *Service {
@@ -27,12 +27,15 @@ func New(provider provider, repository repositoryOfOrders) *Service {
 }
 
 func (serv *Service) Start() {
-	ticker := time.NewTicker(time.Second)
+	ticker := time.NewTicker(2 * time.Second)
+
+	var orders []model.Order
 
 	for range ticker.C {
-		orders := serv.Prov.GetLocalhostBodyRequest()
-		for i := 0; i < len(orders); i++ {
-			serv.Repo.Add(orders[i])
+		for _, val := range serv.Prov.GetLocalhostBodyRequest() {
+			orders = append(orders, val)
 		}
+		serv.Repo.Add(orders)
 	}
+
 }

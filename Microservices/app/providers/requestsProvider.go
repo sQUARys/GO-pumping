@@ -33,16 +33,11 @@ func (prov *Provider) GetLocalhostBodyRequest() []model.Order {
 		return nil
 	}
 
-	orders := prov.UnMarshalBodyRequest(body)
-
-	return orders
-}
-
-func (prov *Provider) UnMarshalBodyRequest(body []byte) []model.Order {
 	var content model.Content
-	err := json.Unmarshal(body, &content)
+	err = json.Unmarshal(body, &content)
 	if err != nil {
 		log.Println("Error: ", err)
 	}
+
 	return content.Orders
 }
