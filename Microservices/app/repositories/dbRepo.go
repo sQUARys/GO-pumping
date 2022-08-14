@@ -19,6 +19,8 @@ const (
 	dbname   = "myDb"
 
 	dbInsertJSON = `INSERT INTO "order_table"( "order_id", "status", "store_id", "date_created") VALUES `
+
+	format = "(%d , '%s' , %d , '%s'),"
 )
 
 var (
@@ -55,7 +57,6 @@ func (repo *Repository) Add(orders []model.Order) {
 	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
 	defer cancel()
 
-	format := "(%d , '%s' , %d , '%s'),"
 	for i := 0; i < len(orders); i++ {
 		formattedOrders = append(formattedOrders, fmt.Sprintf(format, orders[i].OrderId, orders[i].Status, orders[i].StoreId, orders[i].DateCreated))
 	}
