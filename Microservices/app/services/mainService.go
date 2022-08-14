@@ -11,7 +11,7 @@ type Service struct {
 }
 
 type provider interface {
-	GetLocalhostBodyRequest() []model.Order
+	GetOrdersFromServer() []model.Order
 }
 
 type repositoryOfOrders interface {
@@ -32,7 +32,7 @@ func (serv *Service) Start() {
 	var orders []model.Order
 
 	for range ticker.C {
-		for _, val := range serv.Prov.GetLocalhostBodyRequest() {
+		for _, val := range serv.Prov.GetOrdersFromServer() {
 			orders = append(orders, val)
 		}
 		serv.Repo.Add(orders)
