@@ -48,7 +48,7 @@ func New() *Repository {
 	return &repo
 }
 
-func (repo *Repository) Add(orders []model.Order) {
+func (repo *Repository) Add(orders []model.Order) error {
 	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
 	defer cancel()
 
@@ -70,6 +70,7 @@ func (repo *Repository) Add(orders []model.Order) {
 		dbInsertRequest,
 	)
 	if err != nil {
-		log.Print(err)
+		return err
 	}
+	return nil
 }

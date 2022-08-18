@@ -4,7 +4,6 @@ import (
 	"encoding/json"
 	"github.com/sQUARys/GO-pumping/app/model"
 	"io"
-	"log"
 	"net/http"
 )
 
@@ -19,25 +18,23 @@ func New() *Provider {
 	return &prov
 }
 
-func (prov *Provider) GetOrders() []model.Order {
+func (prov *Provider) GetOrders() ([]model.Order, error) {
 	resp, err := http.Get(prov.Url)
 	if err != nil {
-		log.Println("Error: ", err)
-		return nil
+		return nil, err
 	}
 	defer resp.Body.Close()
 
 	body, err := io.ReadAll(resp.Body)
 	if err != nil {
-		log.Println("Error: ", err)
-		return nil
+		return nil, err
 	}
 
 	var content model.Content
 	err = json.Unmarshal(body, &content)
 	if err != nil {
-		log.Println("Error: ", err)
+		return nil, err
 	}
 
-	return content.Orders
+	return content.Orders, nil
 }

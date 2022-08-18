@@ -2,6 +2,7 @@ package services
 
 import (
 	"github.com/sQUARys/GO-pumping/app/model"
+	"log"
 	"time"
 )
 
@@ -11,11 +12,11 @@ type Service struct {
 }
 
 type provider interface {
-	GetOrders() []model.Order
+	GetOrders() ([]model.Order, error)
 }
 
 type repositoryOfOrders interface {
-	Add([]model.Order)
+	Add([]model.Order) error
 }
 
 func New(provider provider, repository repositoryOfOrders) *Service {
@@ -29,13 +30,18 @@ func New(provider provider, repository repositoryOfOrders) *Service {
 func (serv *Service) Start() {
 	ticker := time.NewTicker(2 * time.Second)
 
-	var orders []model.Order
-
 	for range ticker.C {
-		for _, order := range serv.Prov.GetOrders() {
-			orders = append(orders, order)
+		orders, err := serv.Prov.GetOrders()
+		if err != nil {
+			log.Println("Error : ", err)
+			return
 		}
-		serv.Repo.Add(orders)
+
+		err = serv.Repo.Add(orders)
+		if err != nil {
+			log.Println("Error : ", err)
+			return
+		}
 	}
 
 }
