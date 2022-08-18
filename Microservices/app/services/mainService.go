@@ -32,8 +32,8 @@ func (serv *Service) Start() {
 	var orders []model.Order
 
 	for range ticker.C {
-		for _, val := range serv.Prov.GetOrders() {
-			orders = append(orders, val)
+		for _, order := range serv.Prov.GetOrders() {
+			orders = append(orders, order)
 		}
 		serv.Repo.Add(orders)
 	}
