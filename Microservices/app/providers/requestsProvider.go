@@ -3,7 +3,7 @@ package providers
 import (
 	"encoding/json"
 	"github.com/sQUARys/GO-pumping/app/model"
-	"io/ioutil"
+	"io"
 	"log"
 	"net/http"
 )
@@ -27,7 +27,7 @@ func (prov *Provider) GetOrders() []model.Order {
 	}
 	defer resp.Body.Close()
 
-	body, err := ioutil.ReadAll(resp.Body)
+	body, err := io.ReadAll(resp.Body)
 	if err != nil {
 		log.Println("Error: ", err)
 		return nil
