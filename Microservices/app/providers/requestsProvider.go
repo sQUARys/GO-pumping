@@ -19,7 +19,7 @@ func New() *Provider {
 	return &prov
 }
 
-func (prov *Provider) GetOrdersFromServer() []model.Order {
+func (prov *Provider) GetOrders() []model.Order {
 	resp, err := http.Get(prov.Url)
 	if err != nil {
 		log.Println("Error: ", err)

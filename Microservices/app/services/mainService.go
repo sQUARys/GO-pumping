@@ -11,7 +11,7 @@ type Service struct {
 }
 
 type provider interface {
-	GetOrdersFromServer() []model.Order
+	GetOrders() []model.Order
 }
 
 type repositoryOfOrders interface {
@@ -32,7 +32,7 @@ func (serv *Service) Start() {
 	var orders []model.Order
 
 	for range ticker.C {
-		for _, val := range serv.Prov.GetOrdersFromServer() {
+		for _, val := range serv.Prov.GetOrders() {
 			orders = append(orders, val)
 		}
 		serv.Repo.Add(orders)
