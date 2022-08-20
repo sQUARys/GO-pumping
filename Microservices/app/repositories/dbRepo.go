@@ -20,7 +20,10 @@ const (
 
 	dbInsertJSON = `INSERT INTO "order_table"( "order_id", "status", "store_id", "date_created") VALUES `
 
-	format = "(%d , '%s' , %d , '%s'),"
+	format           = "(%d , '%s' , %d , '%s'),"
+	connectionFormat = "host=%s port=%d user=%s password=%s dbname=%s sslmode=disable"
+
+	dbOrdersByIdRequest = "SELECT * FROM order_table WHERE order_id = $1"
 )
 
 type Repository struct {
@@ -29,7 +32,7 @@ type Repository struct {
 
 func New() *Repository {
 
-	connectionString := fmt.Sprintf("host=%s port=%d user=%s password=%s dbname=%s sslmode=disable", host, port, user, password, dbname)
+	connectionString := fmt.Sprintf(connectionFormat, host, port, user, password, dbname)
 
 	db, err := sql.Open("postgres", connectionString)
 	if err != nil {
@@ -73,4 +76,26 @@ func (repo *Repository) Add(orders []model.Order) error {
 		return err
 	}
 	return nil
+}
+
+func (repo *Repository) GetOrdersById(id int) ([]model.Order, error) {
+	rows, err := repo.DbStruct.Query(dbOrdersByIdRequest, id)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+
+	var orders []model.Order
+
+	for rows.Next() {
+		var order model.Order
+		if err := rows.Scan(&order.OrderId, &order.Status, &order.StoreId, &order.DateCreated); err != nil {
+			return orders, err
+		}
+		orders = append(orders, order)
+	}
+	if err = rows.Err(); err != nil {
+		return orders, err
+	}
+	return orders, nil
 }

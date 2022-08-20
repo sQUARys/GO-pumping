@@ -17,6 +17,7 @@ type provider interface {
 
 type repositoryOfOrders interface {
 	Add([]model.Order) error
+	GetOrdersById(id int) ([]model.Order, error)
 }
 
 func New(provider provider, repository repositoryOfOrders) *Service {
@@ -43,5 +44,9 @@ func (serv *Service) Start() {
 			return
 		}
 	}
+}
 
+func (serv *Service) GetOrders(id int) ([]model.Order, error) {
+	orders, err := serv.Repo.GetOrdersById(id)
+	return orders, err
 }
