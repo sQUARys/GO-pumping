@@ -1,23 +1,15 @@
 package main
 
 import (
-	"Microservices/controller"
-	"Microservices/database"
-	"Microservices/models"
-	"time"
+	"github.com/sQUARys/GO-pumping/app/providers"
+	"github.com/sQUARys/GO-pumping/app/repositories"
+	"github.com/sQUARys/GO-pumping/app/services"
 )
 
 func main() {
-	var body models.Content
+	provider := providers.New()
+	repository := repositories.New()
+	service := services.New(provider, repository)
 
-	ticker := time.NewTicker(time.Minute)
-
-	db := database.New()
-	for range ticker.C {
-		bodyJSON := controller.GetBodyRequest()
-		body = controller.UnMarshal(bodyJSON)
-		for j := 0; j < len(body.Content); j++ {
-			db.Add(body.Content[j])
-		}
-	}
+	service.Start()
 }
