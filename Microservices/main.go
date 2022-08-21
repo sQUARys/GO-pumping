@@ -15,8 +15,9 @@ func main() {
 	service := services.New(provider, repository)
 	go service.Start()
 
-	r := mux.NewRouter()
 	controller := controller.New(service)
-	controller.ReadOrdersId(r)
+
+	r := mux.NewRouter()
+	r.HandleFunc("/order/{id}", controller.ReadOrdersId).Methods("POST")
 	http.ListenAndServe(":8080", r)
 }

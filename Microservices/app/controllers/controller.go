@@ -4,7 +4,6 @@ import (
 	"encoding/json"
 	"github.com/gorilla/mux"
 	"github.com/sQUARys/GO-pumping/app/model"
-
 	"log"
 	"net/http"
 	"strconv"
@@ -25,31 +24,28 @@ func New(service Service) *Controller {
 	}
 }
 
-func (ctr *Controller) ReadOrdersId(r *mux.Router) {
+func (ctr *Controller) ReadOrdersId(w http.ResponseWriter, r *http.Request) {
 
-	r.HandleFunc("/order/{id}", func(w http.ResponseWriter, r *http.Request) {
-		w.Header().Set("content-type", "application/json")
+	w.Header().Set("content-type", "application/json")
 
-		vars := mux.Vars(r)
-		id := vars["id"]
+	vars := mux.Vars(r)
+	id := vars["id"]
 
-		idNumber, err := strconv.Atoi(id)
-		if err != nil {
-			log.Println("Error strconv in controller level : ", err)
-		}
+	idNumber, err := strconv.Atoi(id)
+	if err != nil {
+		log.Println("Error strconv in controller level : ", err)
+	}
 
-		orders, err := ctr.Serv.GetOrders(idNumber)
-		if err != nil {
-			log.Println("Error GetOrders in controller level : ", err)
-		}
+	orders, err := ctr.Serv.GetOrders(idNumber)
+	if err != nil {
+		log.Println("Error GetOrders in controller level : ", err)
+	}
 
-		ordersJSON, err := json.Marshal(orders)
-		if err != nil {
-			log.Println("Error json in controller level : ", err)
-		}
+	ordersJSON, err := json.Marshal(orders)
+	if err != nil {
+		log.Println("Error json in controller level : ", err)
+	}
 
-		w.Write(ordersJSON)
-
-	}).Methods("POST")
+	w.Write(ordersJSON)
 
 }

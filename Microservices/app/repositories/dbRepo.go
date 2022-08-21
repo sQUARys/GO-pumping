@@ -20,8 +20,8 @@ const (
 
 	dbInsertJSON = `INSERT INTO "order_table"( "order_id", "status", "store_id", "date_created") VALUES `
 
-	format           = "(%d , '%s' , %d , '%s'),"
-	connectionFormat = "host=%s port=%d user=%s password=%s dbname=%s sslmode=disable"
+	format                 = "(%d , '%s' , %d , '%s'),"
+	connectionStringFormat = "host=%s port=%d user=%s password=%s dbname=%s sslmode=disable"
 
 	dbOrdersByIdRequest = "SELECT * FROM order_table WHERE order_id = $1"
 )
@@ -32,7 +32,7 @@ type Repository struct {
 
 func New() *Repository {
 
-	connectionString := fmt.Sprintf(connectionFormat, host, port, user, password, dbname)
+	connectionString := fmt.Sprintf(connectionStringFormat, host, port, user, password, dbname)
 
 	db, err := sql.Open("postgres", connectionString)
 	if err != nil {
