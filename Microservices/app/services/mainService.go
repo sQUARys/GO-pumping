@@ -34,13 +34,13 @@ func (serv *Service) Start() {
 	for range ticker.C {
 		orders, err := serv.Prov.GetOrders()
 		if err != nil {
-			log.Println("Error : ", err)
+			log.Println("Error in service level: ", err)
 			return
 		}
 
 		err = serv.Repo.Add(orders)
 		if err != nil {
-			log.Println("Error : ", err)
+			log.Println("Error in service level: ", err)
 			return
 		}
 	}
