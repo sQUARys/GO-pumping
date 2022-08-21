@@ -48,5 +48,8 @@ func (serv *Service) Start() {
 
 func (serv *Service) GetOrders(id int) ([]model.Order, error) {
 	orders, err := serv.Repo.GetOrdersById(id)
-	return orders, err
+	if err != nil {
+		return nil, err
+	}
+	return orders, nil
 }
