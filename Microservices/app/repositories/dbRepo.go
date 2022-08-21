@@ -78,24 +78,16 @@ func (repo *Repository) Add(orders []model.Order) error {
 	return nil
 }
 
-func (repo *Repository) GetOrdersById(id int) ([]model.Order, error) {
-	rows, err := repo.DbStruct.Query(dbOrdersByIdRequest, id)
-	if err != nil {
-		return nil, err
-	}
-	defer rows.Close()
+func (repo *Repository) GetOrderById(id int) (model.Order, error) {
+	row := repo.DbStruct.QueryRow(dbOrdersByIdRequest, id)
 
-	var orders []model.Order
+	var order model.Order
 
-	for rows.Next() {
-		var order model.Order
-		if err := rows.Scan(&order.OrderId, &order.Status, &order.StoreId, &order.DateCreated); err != nil {
-			return orders, err
-		}
-		orders = append(orders, order)
+	if err := row.Scan(&order.OrderId, &order.Status, &order.StoreId, &order.DateCreated); err != nil {
+		return order, err
 	}
-	if err = rows.Err(); err != nil {
-		return orders, err
+	if err := row.Err(); err != nil {
+		return order, err
 	}
-	return orders, nil
+	return order, nil
 }

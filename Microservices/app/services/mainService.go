@@ -17,7 +17,7 @@ type provider interface {
 
 type repositoryOfOrders interface {
 	Add([]model.Order) error
-	GetOrdersById(id int) ([]model.Order, error)
+	GetOrderById(id int) (model.Order, error)
 }
 
 func New(provider provider, repository repositoryOfOrders) *Service {
@@ -32,13 +32,13 @@ func (serv *Service) Start() {
 	ticker := time.NewTicker(2 * time.Second)
 
 	for range ticker.C {
-		orders, err := serv.Prov.GetOrders()
+		order, err := serv.Prov.GetOrders()
 		if err != nil {
 			log.Println("Error in service level: ", err)
 			return
 		}
 
-		err = serv.Repo.Add(orders)
+		err = serv.Repo.Add(order)
 		if err != nil {
 			log.Println("Error in service level: ", err)
 			return
@@ -46,10 +46,10 @@ func (serv *Service) Start() {
 	}
 }
 
-func (serv *Service) GetOrders(id int) ([]model.Order, error) {
-	orders, err := serv.Repo.GetOrdersById(id)
+func (serv *Service) GetOrder(id int) (model.Order, error) {
+	order, err := serv.Repo.GetOrderById(id)
 	if err != nil {
-		return nil, err
+		return model.Order{}, err
 	}
-	return orders, nil
+	return order, nil
 }

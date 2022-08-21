@@ -11,41 +11,41 @@ import (
 
 type Service interface {
 	Start()
-	GetOrders(int) ([]model.Order, error)
+	GetOrder(int) (model.Order, error)
 }
 
 type Controller struct {
-	Serv Service
+	Service Service
 }
 
 func New(service Service) *Controller {
 	return &Controller{
-		Serv: service,
+		Service: service,
 	}
 }
 
-func (ctr *Controller) ReadOrdersId(w http.ResponseWriter, r *http.Request) {
+func (ctr *Controller) ReadOrdersById(w http.ResponseWriter, r *http.Request) {
 
 	w.Header().Set("content-type", "application/json")
 
 	vars := mux.Vars(r)
-	id := vars["id"]
+	idString := vars["id"]
 
-	idNumber, err := strconv.Atoi(id)
+	idInt, err := strconv.Atoi(idString)
 	if err != nil {
 		log.Println("Error strconv in controller level : ", err)
 	}
 
-	orders, err := ctr.Serv.GetOrders(idNumber)
+	order, err := ctr.Service.GetOrder(idInt)
 	if err != nil {
-		log.Println("Error GetOrders in controller level : ", err)
+		log.Println("Error GetOrder in controller level : ", err)
 	}
 
-	ordersJSON, err := json.Marshal(orders)
+	orderJSON, err := json.Marshal(order)
 	if err != nil {
 		log.Println("Error json in controller level : ", err)
 	}
 
-	w.Write(ordersJSON)
+	w.Write(orderJSON)
 
 }
