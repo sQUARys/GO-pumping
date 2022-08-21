@@ -11,7 +11,7 @@ import (
 )
 
 type Service interface {
-	Start() error
+	Start()
 	GetOrders(int) ([]model.Order, error)
 }
 
