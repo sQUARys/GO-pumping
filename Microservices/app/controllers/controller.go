@@ -25,8 +25,7 @@ func New(service Service) *Controller {
 	}
 }
 
-func (ctr *Controller) ReadOrdersId() {
-	r := mux.NewRouter()
+func (ctr *Controller) ReadOrdersId(r *mux.Router) {
 
 	r.HandleFunc("/order/{id}", func(w http.ResponseWriter, r *http.Request) {
 		w.Header().Set("content-type", "application/json")
@@ -53,5 +52,4 @@ func (ctr *Controller) ReadOrdersId() {
 
 	}).Methods("POST")
 
-	http.ListenAndServe(":8080", r)
 }
