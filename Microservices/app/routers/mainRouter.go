@@ -5,6 +5,8 @@ import (
 	"net/http"
 )
 
+//И еще. Из контроллера и роутера убери интерфейсы. И передавай пря по типу.
+
 type Ctr interface {
 	GetOrderById(w http.ResponseWriter, r *http.Request)
 }

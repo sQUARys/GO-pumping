@@ -5,7 +5,7 @@ import (
 	"database/sql"
 	"fmt"
 	_ "github.com/lib/pq"
-	"github.com/sQUARys/GO-pumping/app/model"
+	"github.com/sQUARys/GO-pumping/app/order"
 	"log"
 	"strings"
 	"time"
@@ -51,7 +51,7 @@ func New() *Repository {
 	return &repo
 }
 
-func (repo *Repository) AddOrders(orders []model.Order) error {
+func (repo *Repository) AddOrders(orders []order.Order) error {
 	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
 	defer cancel()
 
@@ -78,10 +78,10 @@ func (repo *Repository) AddOrders(orders []model.Order) error {
 	return nil
 }
 
-func (repo *Repository) GetOrderById(id int) (model.Order, error) {
+func (repo *Repository) GetOrderById(id int) (order.Order, error) {
 	row := repo.DbStruct.QueryRow(dbOrdersByIdRequest, id)
 
-	var order model.Order
+	var order order.Order
 
 	if err := row.Scan(&order.OrderId, &order.Status, &order.StoreId, &order.DateCreated); err != nil {
 		return order, err

@@ -1,7 +1,7 @@
 package services
 
 import (
-	"github.com/sQUARys/GO-pumping/app/model"
+	"github.com/sQUARys/GO-pumping/app/order"
 	"log"
 	"time"
 )
@@ -12,12 +12,12 @@ type Service struct {
 }
 
 type provider interface {
-	GetOrders() ([]model.Order, error)
+	GetOrders() ([]order.Order, error)
 }
 
 type ordersRepository interface {
-	AddOrders([]model.Order) error
-	GetOrderById(id int) (model.Order, error)
+	AddOrders([]order.Order) error
+	GetOrderById(id int) (order.Order, error)
 }
 
 func New(provider provider, repository ordersRepository) *Service {
@@ -32,12 +32,16 @@ func (serv *Service) Start() {
 	ticker := time.NewTicker(2 * time.Second)
 
 	for range ticker.C {
-		orders := serv.GetOrders()
-		serv.AddOrders(orders)
+		serv.Execute()
 	}
 }
 
-func (serv *Service) GetOrders() []model.Order {
+func (serv *Service) Execute() {
+	orders := serv.GetOrders()
+	serv.AddOrders(orders)
+}
+
+func (serv *Service) GetOrders() []order.Order {
 	orders, err := serv.Prov.GetOrders()
 	if err != nil {
 		log.Println("Error in service level: ", err)
@@ -46,15 +50,15 @@ func (serv *Service) GetOrders() []model.Order {
 	return orders
 }
 
-func (serv *Service) GetOrderById(id int) (model.Order, error) {
-	order, err := serv.Repo.GetOrderById(id)
+func (serv *Service) GetOrderById(id int) (order.Order, error) {
+	o, err := serv.Repo.GetOrderById(id)
 	if err != nil {
-		return model.Order{}, err
+		return order.Order{}, err
 	}
-	return order, nil
+	return o, nil
 }
 
-func (serv *Service) AddOrders(orders []model.Order) {
+func (serv *Service) AddOrders(orders []order.Order) {
 	err := serv.Repo.AddOrders(orders)
 	if err != nil {
 		log.Println("Error in service level: ", err)

@@ -2,13 +2,17 @@ package providers
 
 import (
 	"encoding/json"
-	"github.com/sQUARys/GO-pumping/app/model"
+	"github.com/sQUARys/GO-pumping/app/order"
 	"io"
 	"net/http"
 )
 
 type Provider struct {
 	Url string
+}
+
+type OrderDTO struct {
+	Orders []order.Order `json:"content"`
 }
 
 func New() *Provider {
@@ -18,7 +22,7 @@ func New() *Provider {
 	return &prov
 }
 
-func (prov *Provider) GetOrders() ([]model.Order, error) {
+func (prov *Provider) GetOrders() ([]order.Order, error) {
 	resp, err := http.Get(prov.Url)
 	if err != nil {
 		return nil, err
@@ -30,7 +34,7 @@ func (prov *Provider) GetOrders() ([]model.Order, error) {
 		return nil, err
 	}
 
-	var content model.Content
+	var content OrderDTO
 	err = json.Unmarshal(body, &content)
 	if err != nil {
 		return nil, err
