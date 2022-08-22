@@ -11,7 +11,7 @@ import (
 
 type Service interface {
 	Start()
-	GetOrder(int) (model.Order, error)
+	GetOrderById(int) (model.Order, error)
 }
 
 type Controller struct {
@@ -38,7 +38,7 @@ func (ctr *Controller) GetOrderById(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	order, err := ctr.Service.GetOrder(idInt)
+	order, err := ctr.Service.GetOrderById(idInt)
 	if err != nil {
 		log.Println("Error GetOrder in controller level : ", err)
 		w.WriteHeader(http.StatusInternalServerError)

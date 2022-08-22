@@ -51,7 +51,7 @@ func New() *Repository {
 	return &repo
 }
 
-func (repo *Repository) Add(orders []model.Order) error {
+func (repo *Repository) AddOrders(orders []model.Order) error {
 	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
 	defer cancel()
 

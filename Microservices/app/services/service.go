@@ -16,7 +16,7 @@ type provider interface {
 }
 
 type ordersRepository interface {
-	Add([]model.Order) error
+	AddOrders([]model.Order) error
 	GetOrderById(id int) (model.Order, error)
 }
 
@@ -32,28 +32,32 @@ func (serv *Service) Start() {
 	ticker := time.NewTicker(2 * time.Second)
 
 	for range ticker.C {
-		serv.AddOrders()
+		orders := serv.GetOrders()
+		serv.AddOrders(orders)
 	}
 }
 
-func (serv *Service) AddOrders() {
-	order, err := serv.Prov.GetOrders()
+func (serv *Service) GetOrders() []model.Order {
+	orders, err := serv.Prov.GetOrders()
 	if err != nil {
 		log.Println("Error in service level: ", err)
-		return
+		return nil
 	}
-
-	err = serv.Repo.Add(order)
-	if err != nil {
-		log.Println("Error in service level: ", err)
-		return
-	}
+	return orders
 }
 
-func (serv *Service) GetOrder(id int) (model.Order, error) {
+func (serv *Service) GetOrderById(id int) (model.Order, error) {
 	order, err := serv.Repo.GetOrderById(id)
 	if err != nil {
 		return model.Order{}, err
 	}
 	return order, nil
+}
+
+func (serv *Service) AddOrders(orders []model.Order) {
+	err := serv.Repo.AddOrders(orders)
+	if err != nil {
+		log.Println("Error in service level: ", err)
+		return
+	}
 }
