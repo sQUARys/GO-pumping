@@ -3,24 +3,19 @@ package controller
 import (
 	"encoding/json"
 	"github.com/gorilla/mux"
-	"github.com/sQUARys/GO-pumping/app/order"
+	"github.com/sQUARys/GO-pumping/app/services"
 	"log"
 	"net/http"
 	"strconv"
 )
 
-type Service interface {
-	Start()
-	GetOrderById(int) (order.Order, error)
-}
-
 type Controller struct {
-	Service Service
+	Service services.Service
 }
 
-func New(service Service) *Controller {
+func New(service *services.Service) *Controller {
 	return &Controller{
-		Service: service,
+		Service: *service,
 	}
 }
 

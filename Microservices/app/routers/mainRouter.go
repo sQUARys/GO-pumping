@@ -2,24 +2,18 @@ package routers
 
 import (
 	"github.com/gorilla/mux"
-	"net/http"
+	controller "github.com/sQUARys/GO-pumping/app/controllers"
 )
-
-//И еще. Из контроллера и роутера убери интерфейсы. И передавай пря по типу.
-
-type Ctr interface {
-	GetOrderById(w http.ResponseWriter, r *http.Request)
-}
 
 type Router struct {
 	Router     *mux.Router
-	Controller Ctr
+	Controller controller.Controller
 }
 
-func New(controller Ctr) *Router {
+func New(controller *controller.Controller) *Router {
 	r := mux.NewRouter()
 	return &Router{
-		Controller: controller,
+		Controller: *controller,
 		Router:     r,
 	}
 }
