@@ -6,7 +6,7 @@ import (
 )
 
 type Ctr interface {
-	ReadOrdersById(w http.ResponseWriter, r *http.Request)
+	GetOrderById(w http.ResponseWriter, r *http.Request)
 }
 
 type Router struct {
@@ -23,5 +23,5 @@ func New(controller Ctr) *Router {
 }
 
 func (r *Router) SetRoutes() {
-	r.Router.HandleFunc("/order/{id}", r.Controller.ReadOrdersById).Methods("POST")
+	r.Router.HandleFunc("/order/{id}", r.Controller.GetOrderById).Methods("POST")
 }

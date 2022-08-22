@@ -24,7 +24,7 @@ func New(service Service) *Controller {
 	}
 }
 
-func (ctr *Controller) ReadOrdersById(w http.ResponseWriter, r *http.Request) {
+func (ctr *Controller) GetOrderById(w http.ResponseWriter, r *http.Request) {
 
 	w.Header().Set("content-type", "application/json")
 
@@ -34,16 +34,22 @@ func (ctr *Controller) ReadOrdersById(w http.ResponseWriter, r *http.Request) {
 	idInt, err := strconv.Atoi(idString)
 	if err != nil {
 		log.Println("Error strconv in controller level : ", err)
+		w.WriteHeader(http.StatusInternalServerError)
+		return
 	}
 
 	order, err := ctr.Service.GetOrder(idInt)
 	if err != nil {
 		log.Println("Error GetOrder in controller level : ", err)
+		w.WriteHeader(http.StatusInternalServerError)
+		return
 	}
 
 	orderJSON, err := json.Marshal(order)
 	if err != nil {
 		log.Println("Error json in controller level : ", err)
+		w.WriteHeader(http.StatusInternalServerError)
+		return
 	}
 
 	w.Write(orderJSON)

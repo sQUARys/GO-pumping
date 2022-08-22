@@ -8,19 +8,19 @@ import (
 
 type Service struct {
 	Prov provider
-	Repo repositoryOfOrders
+	Repo ordersRepository
 }
 
 type provider interface {
 	GetOrders() ([]model.Order, error)
 }
 
-type repositoryOfOrders interface {
+type ordersRepository interface {
 	Add([]model.Order) error
 	GetOrderById(id int) (model.Order, error)
 }
 
-func New(provider provider, repository repositoryOfOrders) *Service {
+func New(provider provider, repository ordersRepository) *Service {
 	serv := Service{
 		Prov: provider,
 		Repo: repository,
@@ -32,11 +32,11 @@ func (serv *Service) Start() {
 	ticker := time.NewTicker(2 * time.Second)
 
 	for range ticker.C {
-		serv.AddOrdersToDb()
+		serv.AddOrders()
 	}
 }
 
-func (serv *Service) AddOrdersToDb() {
+func (serv *Service) AddOrders() {
 	order, err := serv.Prov.GetOrders()
 	if err != nil {
 		log.Println("Error in service level: ", err)
