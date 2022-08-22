@@ -32,17 +32,21 @@ func (serv *Service) Start() {
 	ticker := time.NewTicker(2 * time.Second)
 
 	for range ticker.C {
-		order, err := serv.Prov.GetOrders()
-		if err != nil {
-			log.Println("Error in service level: ", err)
-			return
-		}
+		serv.AddOrdersToDb()
+	}
+}
 
-		err = serv.Repo.Add(order)
-		if err != nil {
-			log.Println("Error in service level: ", err)
-			return
-		}
+func (serv *Service) AddOrdersToDb() {
+	order, err := serv.Prov.GetOrders()
+	if err != nil {
+		log.Println("Error in service level: ", err)
+		return
+	}
+
+	err = serv.Repo.Add(order)
+	if err != nil {
+		log.Println("Error in service level: ", err)
+		return
 	}
 }
 
