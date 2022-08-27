@@ -11,7 +11,7 @@ type Provider struct {
 	Url string
 }
 
-type OrderDTO struct {
+type orderDTO struct {
 	Orders []order.Order `json:"content"`
 }
 
@@ -34,7 +34,7 @@ func (prov *Provider) GetOrders() ([]order.Order, error) {
 		return nil, err
 	}
 
-	var content OrderDTO
+	var content orderDTO
 	err = json.Unmarshal(body, &content)
 	if err != nil {
 		return nil, err
