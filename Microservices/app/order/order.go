@@ -1,8 +1,4 @@
-package model
-
-type Content struct {
-	Orders []Order `json:"content"`
-}
+package order
 
 type Order struct {
 	OrderId     int    `json:"order_id"`

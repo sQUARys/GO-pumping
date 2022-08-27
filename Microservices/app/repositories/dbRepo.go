@@ -5,7 +5,7 @@ import (
 	"database/sql"
 	"fmt"
 	_ "github.com/lib/pq"
-	"github.com/sQUARys/GO-pumping/app/model"
+	"github.com/sQUARys/GO-pumping/app/order"
 	"log"
 	"strings"
 	"time"
@@ -20,7 +20,10 @@ const (
 
 	dbInsertJSON = `INSERT INTO "order_table"( "order_id", "status", "store_id", "date_created") VALUES `
 
-	format = "(%d , '%s' , %d , '%s'),"
+	format                 = "(%d , '%s' , %d , '%s'),"
+	connectionStringFormat = "host=%s port=%d user=%s password=%s dbname=%s sslmode=disable"
+
+	dbOrdersByIdRequest = "SELECT * FROM order_table WHERE order_id = $1"
 )
 
 type Repository struct {
@@ -29,7 +32,7 @@ type Repository struct {
 
 func New() *Repository {
 
-	connectionString := fmt.Sprintf("host=%s port=%d user=%s password=%s dbname=%s sslmode=disable", host, port, user, password, dbname)
+	connectionString := fmt.Sprintf(connectionStringFormat, host, port, user, password, dbname)
 
 	db, err := sql.Open("postgres", connectionString)
 	if err != nil {
@@ -48,7 +51,7 @@ func New() *Repository {
 	return &repo
 }
 
-func (repo *Repository) Add(orders []model.Order) error {
+func (repo *Repository) AddOrders(orders []order.Order) error {
 	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
 	defer cancel()
 
@@ -73,4 +76,18 @@ func (repo *Repository) Add(orders []model.Order) error {
 		return err
 	}
 	return nil
+}
+
+func (repo *Repository) GetOrderById(id int) (order.Order, error) {
+	row := repo.DbStruct.QueryRow(dbOrdersByIdRequest, id)
+
+	var order order.Order
+
+	if err := row.Scan(&order.OrderId, &order.Status, &order.StoreId, &order.DateCreated); err != nil {
+		return order, err
+	}
+	if err := row.Err(); err != nil {
+		return order, err
+	}
+	return order, nil
 }
