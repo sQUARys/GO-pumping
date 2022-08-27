@@ -37,17 +37,25 @@ func (serv *Service) Start() {
 }
 
 func (serv *Service) Execute() {
-	orders := serv.GetOrders()
-	serv.AddOrders(orders)
+	orders , err := serv.GetOrders()
+	if err != nil{
+		log.Println("Error : " , err)
+		return
+	}
+	
+	err = serv.AddOrders(orders)
+	if err != nil{
+		log.Println("Error : " , err)
+		return
+	}
 }
 
-func (serv *Service) GetOrders() []order.Order {
+func (serv *Service) GetOrders() ([]order.Order , error) {
 	orders, err := serv.Prov.GetOrders()
 	if err != nil {
-		log.Println("Error in service level: ", err)
-		return nil
+		return nil , err
 	}
-	return orders
+	return orders , nil
 }
 
 func (serv *Service) GetOrderById(id int) (order.Order, error) {
@@ -58,10 +66,10 @@ func (serv *Service) GetOrderById(id int) (order.Order, error) {
 	return o, nil
 }
 
-func (serv *Service) AddOrders(orders []order.Order) {
+func (serv *Service) AddOrders(orders []order.Order ) error {
 	err := serv.Repo.AddOrders(orders)
 	if err != nil {
-		log.Println("Error in service level: ", err)
-		return
+		return err
 	}
+	return nil
 }
