@@ -42,7 +42,7 @@ func (serv *Service) Execute() {
 		log.Println("Error : " , err)
 		return
 	}
-	
+
 	err = serv.AddOrders(orders)
 	if err != nil{
 		log.Println("Error : " , err)
