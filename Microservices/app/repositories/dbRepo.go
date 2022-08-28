@@ -27,6 +27,11 @@ const (
 	dbOrdersByIdRequest = "SELECT * FROM order_table WHERE order_id = $1"
 )
 
+var (
+	formattedOrders []string
+	dbInsertRequest string
+)
+
 type Repository struct {
 	DbStruct *sql.DB
 }
@@ -54,11 +59,6 @@ func New() *Repository {
 func (repo *Repository) AddOrders(orders []order.Order) error {
 	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
 	defer cancel()
-
-	var (
-		formattedOrders []string
-		dbInsertRequest string
-	)
 
 	for i := 0; i < len(orders); i++ {
 		formattedOrders = append(formattedOrders, fmt.Sprintf(format, orders[i].OrderId, orders[i].Status, orders[i].StoreId, orders[i].DateCreated))
