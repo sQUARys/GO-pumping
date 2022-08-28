@@ -4,11 +4,12 @@ import (
 	"context"
 	"database/sql"
 	"fmt"
-	_ "github.com/lib/pq"
-	"github.com/sQUARys/GO-pumping/app/order"
 	"log"
 	"strings"
 	"time"
+
+	_ "github.com/lib/pq"
+	"github.com/sQUARys/GO-pumping/app/order"
 )
 
 const (
@@ -26,12 +27,16 @@ const (
 	dbOrdersByIdRequest = "SELECT * FROM order_table WHERE order_id = $1"
 )
 
+var (
+	formattedOrders []string
+	dbInsertRequest string
+)
+
 type Repository struct {
 	DbStruct *sql.DB
 }
 
 func New() *Repository {
-
 	connectionString := fmt.Sprintf(connectionStringFormat, host, port, user, password, dbname)
 
 	db, err := sql.Open("postgres", connectionString)
@@ -55,11 +60,6 @@ func (repo *Repository) AddOrders(orders []order.Order) error {
 	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
 	defer cancel()
 
-	var (
-		formattedOrders []string
-		dbInsertRequest string
-	)
-
 	for i := 0; i < len(orders); i++ {
 		formattedOrders = append(formattedOrders, fmt.Sprintf(format, orders[i].OrderId, orders[i].Status, orders[i].StoreId, orders[i].DateCreated))
 	}
@@ -75,6 +75,7 @@ func (repo *Repository) AddOrders(orders []order.Order) error {
 	if err != nil {
 		return err
 	}
+
 	return nil
 }
 
@@ -86,8 +87,10 @@ func (repo *Repository) GetOrderById(id int) (order.Order, error) {
 	if err := row.Scan(&order.OrderId, &order.Status, &order.StoreId, &order.DateCreated); err != nil {
 		return order, err
 	}
+
 	if err := row.Err(); err != nil {
 		return order, err
 	}
+
 	return order, nil
 }

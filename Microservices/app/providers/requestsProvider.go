@@ -1,10 +1,12 @@
 package providers
 
 import (
+	"context"
 	"encoding/json"
-	"github.com/sQUARys/GO-pumping/app/order"
 	"io"
 	"net/http"
+
+	"github.com/sQUARys/GO-pumping/app/order"
 )
 
 type Provider struct {
@@ -19,15 +21,26 @@ func New() *Provider {
 	prov := Provider{
 		Url: "http://localhost:8081",
 	}
+
 	return &prov
 }
 
 func (prov *Provider) GetOrders() ([]order.Order, error) {
-	resp, err := http.Get(prov.Url)
+	ctx := context.Background()
+
+	resp, err := http.NewRequestWithContext(ctx, http.MethodGet, prov.Url, nil)
 	if err != nil {
 		return nil, err
 	}
-	defer resp.Body.Close()
+	defer func() {
+		errC := resp.Body.Close()
+		if errC != nil {
+			if err == nil {
+				err = errC
+				return
+			}
+		}
+	}()
 
 	body, err := io.ReadAll(resp.Body)
 	if err != nil {
@@ -35,10 +48,11 @@ func (prov *Provider) GetOrders() ([]order.Order, error) {
 	}
 
 	var content orderDTO
+
 	err = json.Unmarshal(body, &content)
 	if err != nil {
 		return nil, err
 	}
 
-	return content.Orders, nil
+	return content.Orders, err
 }

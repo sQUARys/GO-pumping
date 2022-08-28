@@ -1,12 +1,15 @@
 package main
 
 import (
+	"log"
+	"net/http"
+	"time"
+
 	controller "github.com/sQUARys/GO-pumping/app/controllers"
 	"github.com/sQUARys/GO-pumping/app/providers"
 	"github.com/sQUARys/GO-pumping/app/repositories"
 	"github.com/sQUARys/GO-pumping/app/routers"
 	"github.com/sQUARys/GO-pumping/app/services"
-	"net/http"
 )
 
 func main() {
@@ -16,9 +19,20 @@ func main() {
 
 	go service.Start()
 
-	controller := controller.New(service)
-	router := routers.New(controller)
+	ctr := controller.New(service)
+	router := routers.New(ctr)
 
 	router.SetRoutes()
-	http.ListenAndServe(":8080", router.Router)
+
+	srv := &http.Server{
+		Addr:         ":8080",
+		ReadTimeout:  5 * time.Minute,
+		WriteTimeout: 5 * time.Minute,
+		Handler:      router.Router,
+	}
+
+	err := srv.ListenAndServe()
+	if err != nil {
+		log.Println("Error in main : ", err)
+	}
 }

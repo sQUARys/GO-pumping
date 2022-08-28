@@ -12,6 +12,7 @@ type Router struct {
 
 func New(controller *controller.Controller) *Router {
 	r := mux.NewRouter()
+
 	return &Router{
 		Controller: *controller,
 		Router:     r,

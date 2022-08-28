@@ -1,9 +1,10 @@
 package services
 
 import (
-	"github.com/sQUARys/GO-pumping/app/order"
 	"log"
 	"time"
+
+	"github.com/sQUARys/GO-pumping/app/order"
 )
 
 type Service struct {
@@ -25,6 +26,7 @@ func New(provider provider, repository ordersRepository) *Service {
 		Prov: provider,
 		Repo: repository,
 	}
+
 	return &serv
 }
 
@@ -37,25 +39,29 @@ func (serv *Service) Start() {
 }
 
 func (serv *Service) Execute() {
-	orders , err := serv.GetOrders()
-	if err != nil{
-		log.Println("Error : " , err)
+	orders, err := serv.GetOrders()
+	if err != nil {
+		log.Println("Error : ", err)
+
 		return
 	}
 
 	err = serv.AddOrders(orders)
-	if err != nil{
-		log.Println("Error : " , err)
+
+	if err != nil {
+		log.Println("Error : ", err)
+
 		return
 	}
 }
 
-func (serv *Service) GetOrders() ([]order.Order , error) {
+func (serv *Service) GetOrders() ([]order.Order, error) {
 	orders, err := serv.Prov.GetOrders()
 	if err != nil {
-		return nil , err
+		return nil, err
 	}
-	return orders , nil
+
+	return orders, nil
 }
 
 func (serv *Service) GetOrderById(id int) (order.Order, error) {
@@ -63,13 +69,15 @@ func (serv *Service) GetOrderById(id int) (order.Order, error) {
 	if err != nil {
 		return order.Order{}, err
 	}
+
 	return o, nil
 }
 
-func (serv *Service) AddOrders(orders []order.Order ) error {
+func (serv *Service) AddOrders(orders []order.Order) error {
 	err := serv.Repo.AddOrders(orders)
 	if err != nil {
 		return err
 	}
+
 	return nil
 }
