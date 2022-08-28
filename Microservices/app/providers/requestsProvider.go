@@ -25,31 +25,28 @@ func New() *Provider {
 	return &prov
 }
 
-func (prov *Provider) GetOrders() ([]order.Order, error) {
+func (prov *Provider) GetOrders() (orders []order.Order, err error) {
 	ctx := context.Background()
 
 	resp, err := http.NewRequestWithContext(ctx, http.MethodGet, prov.Url, nil)
 	if err != nil {
-		return nil, err
+		return
 	}
 
 	defer func() { err = resp.Body.Close() }()
 
-	if err != nil {
-		return nil, err
-	}
-
 	body, err := io.ReadAll(resp.Body)
 	if err != nil {
-		return nil, err
+		return
 	}
 
 	var content orderDTO
 
 	err = json.Unmarshal(body, &content)
 	if err != nil {
-		return nil, err
+		return
 	}
 
-	return content.Orders, nil
+	orders = content.Orders
+
 }
